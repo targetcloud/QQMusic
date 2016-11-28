@@ -49,17 +49,17 @@ class QQMusicCell: UITableViewCell {
         if type == .rotation {
             self.layer.removeAnimation(forKey: "rotation")
             let animation = CAKeyframeAnimation(keyPath: "transform.rotation.z")
-            animation.values = [-1/6 * M_PI, 0, 1/6 * M_PI, 0]
-            animation.duration = 0.2
-            animation.repeatCount = 3
+            animation.values = [ M_PI, 0]
+            animation.duration = 0.5
+            animation.repeatCount = 1
             self.layer.add(animation, forKey: "rotation")
         }
         if type == .scale {
             self.layer.removeAnimation(forKey: "scale")
             let animation = CAKeyframeAnimation(keyPath: "transform.scale.x")
-            animation.values = [0.5, 1, 0.5, 1]
-            animation.duration = 0.2
-            animation.repeatCount = 2
+            animation.values = [0.3, 0.5, 0.8, 1]
+            animation.duration = 1
+            animation.repeatCount = 1
             self.layer.add(animation, forKey: "scale")
         }
     }
