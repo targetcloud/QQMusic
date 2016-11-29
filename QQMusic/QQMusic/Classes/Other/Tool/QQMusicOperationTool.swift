@@ -11,7 +11,7 @@ import MediaPlayer
 
 class QQMusicOperationTool: NSObject {
     static let shareInstance = QQMusicOperationTool()
-    fileprivate let tool = QQMusicTool()
+    let tool = QQMusicTool()
     var musicMs: [QQMusicModel] = [QQMusicModel]()
     fileprivate var lastRow = -1
     fileprivate var artWork: MPMediaItemArtwork?
@@ -67,6 +67,18 @@ class QQMusicOperationTool: NSObject {
     
     func seekToTime(_ time: TimeInterval) {
         tool.seekToTime(time)
+    }
+    
+    func forward(){
+        tool.fastforward(10)
+    }
+    
+    func backward(){
+        tool.fastbackward(10)
+    }
+    
+    func volume(_ value : Float){
+        tool.volume(value)
     }
     
     func setupLockMessage() {

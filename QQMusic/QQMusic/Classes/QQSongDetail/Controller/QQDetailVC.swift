@@ -10,6 +10,7 @@ import UIKit
 //updateOnce updateTimes updateLrc三者频率是越来越快的节奏，后两者用定时器实现，分别用每秒和每秒60次两种分别实现updateTimes updateLrc
 class QQDetailVC: UIViewController,UIScrollViewDelegate {
 
+    @IBOutlet weak var volumeSlider: UISlider!
     @IBOutlet weak var lrcScrollView: UIScrollView!
     @IBOutlet weak var backImageView: UIImageView!
     @IBOutlet weak var foreImageView: UIImageView!
@@ -23,11 +24,15 @@ class QQDetailVC: UIViewController,UIScrollViewDelegate {
     @IBOutlet weak var progressSlider: UISlider!
     @IBOutlet weak var costTimeLabel: UILabel!
     @IBOutlet weak var playOrPauseBtn: UIButton!
-    var updateTimesTimer: Timer?
-    var updateLrcLink: CADisplayLink?
+    fileprivate var updateTimesTimer: Timer?
+    fileprivate var updateLrcLink: CADisplayLink?
     
     deinit {
         NotificationCenter.default.removeObserver(self)
+    }
+    
+    @IBAction func volume(_ sender: UISlider) {
+        QQMusicOperationTool.shareInstance.volume(sender.value)
     }
     
     //UISlider的四个事件（tap、touchDown、touchUp、valueChange）
@@ -80,6 +85,14 @@ class QQDetailVC: UIViewController,UIScrollViewDelegate {
         updateOnce()
     }
     
+    @IBAction func forward(_ sender: UIButton) {
+        QQMusicOperationTool.shareInstance.forward()
+    }
+    
+    @IBAction func backward(_ sender: UIButton) {
+        QQMusicOperationTool.shareInstance.backward()
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         updateOnce()
@@ -101,7 +114,7 @@ class QQDetailVC: UIViewController,UIScrollViewDelegate {
         lrcScrollView.isPagingEnabled = true//滚动scrollview时分页
         lrcScrollView.showsHorizontalScrollIndicator = false//去掉滚动条
         progressSlider.setThumbImage(UIImage(named: "player_slider_playback_thumb"), for: UIControlState())
-        
+        volumeSlider.setThumbImage(UIImage(named: "playing_volumn_slide_sound_icon"), for: UIControlState())
         NotificationCenter.default.addObserver(self, selector: #selector(QQDetailVC.nextMusic), name: NSNotification.Name(rawValue: kPlayFinishNotification), object: nil)
     }
     
@@ -135,6 +148,7 @@ class QQDetailVC: UIViewController,UIScrollViewDelegate {
         songNameLabel.text = musicM.name
         singerNameLabel.text = musicM.singer
         totalTimeLabel.text = musicMessageM.totalTimeFormat //QQTimeTool.getFormatTime(musicMessageM.totalTime)
+        volumeSlider.value = (QQMusicOperationTool.shareInstance.tool.volume)
         //交由歌词控制器来展示
         lrcVC.lrcMs = QQMusicDataTool.getLrcMs(musicM.lrcname)
         //大圆图播放旋转动画

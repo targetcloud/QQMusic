@@ -14,12 +14,12 @@ let kPlayFinishNotification = "playFinish"
 class QQMusicTool: NSObject {
 
     var player: AVAudioPlayer?
-    
+    var volume: Float = 1
     override init() {
         super.init()
         let session = AVAudioSession.sharedInstance()
         do {
-            try session.setCategory(AVAudioSessionCategoryPlayback)
+            try session.setCategory(AVAudioSessionCategoryPlayback)//后台播放
             try session.setActive(true)
         }catch {
             print(error)
@@ -40,7 +40,9 @@ class QQMusicTool: NSObject {
         do {
             player = try AVAudioPlayer(contentsOf: url)
             player?.delegate = self
+            player?.enableRate = true// 设置可以速率播放
             player?.prepareToPlay()
+            player?.volume = volume
             player?.play()
         }catch {
             print(error)
@@ -61,6 +63,22 @@ class QQMusicTool: NSObject {
         player?.stop()
     }
     
+    func fastforward(_ value:TimeInterval){
+        player?.currentTime += value
+    }
+    
+    func fastbackward(_ value:TimeInterval){
+        player?.currentTime -= value
+    }
+    
+    func rate(_ value :Float){//1.0 is normal
+        player?.rate = value
+    }
+    
+    func volume(_ value : Float){//1.0 is full
+        volume = value
+        player?.volume = volume
+    }
 }
 
 extension QQMusicTool: AVAudioPlayerDelegate {
